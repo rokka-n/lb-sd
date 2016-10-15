@@ -1,0 +1,53 @@
+version: "2"
+
+services:
+  # consul stores information about services and 
+  # also does health checks defined in SERVICE_CHECK_SCRIPT below
+  consul:
+    image: gliderlabs/consul-server:latest
+    ports:
+      - "8300:8300"
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    environment:
+      - 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}'
+    command: -server -bootstrap -dev -ui -advertise 127.0.0.1
+  
+  # registrator adds new launched containers to the consul
+  registrator:
+    command: -ip $HOSTNAME consul://consul:8500 
+    container_name: registrator
+    image: gliderlabs/registrator:latest
+    environment:
+      HOSTNAME: $HOSTNAME
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock"
+    links:
+      - consul
+
+  # fabio routs requests to containers registered in consul
+  # it needs to talk to consul so it can up to date routing  
+  fabio:
+    image: magiconair/fabio:latest
+    container_name: fabio
+    ports:
+      - "9999:9999"
+      - "9998:9998"
+    links:
+      - consul
+    volumes:
+      - "./fabio.properties:/etc/fabio/fabio.properties"
+    environment:
+      - SERVICE_9998_TAGS=urlprefix-/fabio
+  
+  # nginx is a backend service where fabio sends requests
+  # scale it with docker-compose scale nginx=5 
+  nginx:
+    image: nginx
+    ports:
+      - 80
+    environment:
+      SERVICE_REGION: us-east-1
+      SERVICE_80_TAGS: urlprefix-/
+      SERVICE_CHECK_SCRIPT: "curl --silent --fail $HOSTNAME:$$SERVICE_PORT"
