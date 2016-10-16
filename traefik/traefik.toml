@@ -1,0 +1,23 @@
+# Default: ["http"]
+# #
+defaultEntryPoints = ["http"]
+loglevel = "DEBUG"
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":9999"
+#
+[web]
+# Web administration port
+address = ":8080"
+
+[consulCatalog]
+endpoint = "consul:8500"
+watch = "True"
+#prefix = "traefik"
+#domain = "consul.localhost"
+
+  [[consulCatalog.constraints]]
+    key = "tag"
+    mustmatch = true
+    regex = "traefik.enable=true"
