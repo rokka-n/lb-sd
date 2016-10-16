@@ -11,7 +11,13 @@ services:
       - "8500:8500"
       - "8600:53/udp"
     environment:
-      - 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}'
+      SERVICE_53_IGNORE: 'yes'
+      SERVICE_8300_IGNORE: 'yes'
+      SERVICE_8301_IGNORE: 'yes'
+      SERVICE_8302_IGNORE: 'yes'
+      SERVICE_8400_IGNORE: 'yes'
+      SERVICE_8500_IGNORE: 'yes'
+      CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
     command: -server -bootstrap -dev -ui -advertise 127.0.0.1
   
   # registrator adds new launched containers to the consul
@@ -35,6 +41,9 @@ services:
     ports:
       - "9999:9999"
       - "8080:8080"
+    environment:
+      SERVICE_9999_ignore: 'yes'
+      SERVICE_8080_ignore: 'yes'
 
   # a demo app as a backend server where traefik sends requests
   # scale it with docker-compose scale backend-app=5 
