@@ -40,14 +40,19 @@ services:
       - "./fabio.properties:/etc/fabio/fabio.properties"
     environment:
       - SERVICE_9998_TAGS=urlprefix-/fabio
-  
-  # nginx is a backend service where fabio sends requests
-  # scale it with docker-compose scale nginx=5 
-  nginx:
-    image: nginx
+
+  backend-app:
+   image: dockercloud/hello-world
+   ports:
+     - 80
+   environment:
+     SERVICE_80_TAGS: urlprefix-/hello
+     SERVICE_CHECK_SCRIPT: "curl --silent --fail $HOSTNAME:$$SERVICE_PORT"
+
+  whoami-app:
+    image: emilevauge/whoami
     ports:
-      - 80
+      - 80 
     environment:
-      SERVICE_REGION: us-east-1
-      SERVICE_80_TAGS: urlprefix-/
+      SERVICE_80_TAGS: urlprefix-/whoami
       SERVICE_CHECK_SCRIPT: "curl --silent --fail $HOSTNAME:$$SERVICE_PORT"
