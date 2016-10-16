@@ -23,5 +23,31 @@ Scale app by multiple number of backend servers:
 
 Fabio loadbalancer automatically starts sending requests to new backend servers, balancing them.
 
+## Haproxy
+
+Change folder to haproxy and run `docker-compose up -d`.
+
+When all container started, there are two apps available via haproxy:
+
+```
+http://localhost:9999/v1/whoami
+http://localhost:9999/v1/hello
+```
+
+Haproxy stats available at `http://localhost:1936/`
+
+### Metrics
+
+Run this container to scrape metrics periodically:
+```
+docker run -d -p 9101:9101 prom/haproxy-exporter -haproxy.scrape-uri="http://$HOSTNAME:1936/;csv"
+```
+
+Scale app servers up and down and observe how haproxy registers and derigesters backends.
+
+``` 
+watch -n 1 'curl -s http://localhost:9101/metrics | grep haproxy_backend_weight '
+```
+
 ### Todo
 Add graphite metrics.

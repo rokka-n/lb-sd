@@ -1,0 +1,5 @@
+template {
+  source = "/consul-template/template.d/haproxy.tmpl"
+  destination = "/etc/haproxy/haproxy.cfg"
+  command = "haproxy -f /etc/haproxy/haproxy.cfg -sf $(pidof haproxy) &"
+}

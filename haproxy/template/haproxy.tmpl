@@ -1,0 +1,48 @@
+global
+    log 127.0.0.1   local0
+    log 127.0.0.1   local1 notice
+#    debug
+    stats timeout 30s
+    maxconn {{with $maxconn:=key "service/haproxy/maxconn"}}{{$maxconn}}{{else}}4096{{end}}
+    daemon
+
+defaults
+    log global
+    option httplog
+    option dontlognull
+    mode http{{range ls "service/haproxy/timeouts"}}
+    timeout {{.Key}} {{.Value}}{{else}}
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000{{end}}
+    errorfile 503 /consul-template/error.d/503.http
+    errorfile 504 /consul-template/error.d/504.http
+
+## This declares the endpoint where your clients will connect.
+frontend http-in
+    bind *:9999
+    {{range $i,$a:=services}}{{$path:=.Name}}{{range .Tags}}{{if eq . "haproxy"}}
+    acl app-{{$a.Name | replaceAll "/" "-"}} path_beg -i /{{$path}}{{end}}{{end}}{{end}}
+    {{range $i,$a:=services}}{{range .Tags}}{{if eq . "haproxy"}}
+    use_backend srvs_{{$a.Name | replaceAll "/" "-"}} if app-{{$a.Name | replaceAll "/" "-"}}{{end}}{{end}}{{end}}
+
+{{range $i,$a:=services}}{{$path:=.Name}}{{range .Tags}}{{if eq . "haproxy"}}
+backend srvs_{{$a.Name | replaceAll "/" "-"}}
+    mode http
+    balance roundrobin
+    option forwardfor
+    option httpchk HEAD / HTTP/1.1\r\nHost:localhost
+    reqrep ^([^\ ]*\ /){{$path}}[/]?(.*)     \1\2{{range $c,$d:=service $a.Name}}
+    server host{{$c}} {{.Address}}:{{.Port}} check{{end}}{{end}}{{end}}{{end}}
+
+
+# This declares a view into HAProxy statistics,
+# You do not need credentials to view this page and you can
+# turn it off once you are done with setup.
+listen stats
+    bind *:1936
+    mode http
+    stats enable
+    stats refresh 30s
+    stats show-node
+    stats uri /
