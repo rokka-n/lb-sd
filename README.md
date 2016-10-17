@@ -73,7 +73,10 @@ Scale app and watch how instances get registred in consul, traefik and start res
 
 ## Nginx
 
-Pretty much the same instructions apply to nginx server (cd to nginx folder). Nginx offers dashboard only in paid version, so there is not much to see  `¯\_(ツ)_/¯`
+Pretty much the same instructions apply to nginx server (cd to nginx folder). Nginx offers dashboard only in paid version, so there is not much to see  `¯\_(ツ)_/¯` - except services working (http://localhost:9999/v1/whoami).
+
+TODO: filter only services with tag == nginx.
+
 
 ### Todo
 Add graphite metrics.
