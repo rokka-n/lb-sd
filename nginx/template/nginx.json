@@ -1,0 +1,5 @@
+template {
+  source = "/consul-template/template.d/nginx.tmpl"
+  destination = "/etc/nginx/conf.d/default.conf"
+  command = "cat /etc/nginx/conf.d/default.conf; /usr/sbin/nginx -s reload"
+}
