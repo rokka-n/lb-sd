@@ -1,0 +1,50 @@
+HTTP/1.0 504 Gateway Timeout
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+
+<html>
+  <head>
+    <title>Service Timed Out | Docker</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            background-color: #253237;
+        }
+
+        .docker-logo {
+            margin: 50px auto 0 auto;
+            width: 271px;
+            height: 242px;
+        }
+
+        .docker-logo img {
+
+        }
+
+        .error {
+            margin: 20px;
+            font-family: "Roboto";
+            font-size: 32px;
+            text-align: center;
+            color: #e7e7e7;
+        }
+
+        .error-detail {
+            margin: 10px;
+            font-family: "Roboto";
+            font-size: 18px;
+            text-align: center;
+            color: #cccccc;
+        }
+    </style>
+  </head>
+  <body>
+        <div class="docker-logo">
+            <img src="https://www.docker.com/sites/default/files/legal/small_v-dark.png" />
+        </div>
+        <div class="error">Oops! The Service Timed Out.</div>
+        <div class="error-detail">The service you are trying to access took too long to respond.</div>
+  </body>
+
