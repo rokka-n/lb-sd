@@ -5,10 +5,14 @@ Fabio, traefik and other contemporary load-balancers in docker-compose for easy 
 
 To run fabio with service discovery, make sure that HOSTNAME env variable is set.
 
-It should resolve to your local computer IP, e.g:
+It should resolve to your local computer IP or in case if you have read dns server in your network - to fqdn, e.g:
 ```
 export HOSTNAME=$(hostname)
+or
+export HOSTNAME=$(ipconfig getifaddr en0)
+
 ```
+This is required so consul can perform healthchecks on external (compare to itself) interface, since all services registered with random ports.
 
 Change folder to fabio and run `docker-compose up -d`.
 
@@ -61,6 +65,8 @@ Set up HOSTNAME env variable, same as for Fabio.
 
 ```
 export HOSTNAME=$(hostname)
+or
+export HOSTNAME=$(ipconfig getifaddr en0)
 ```
 
 Change dir to traefik folder and run `docker-compose up -d`.

@@ -42,7 +42,7 @@ services:
    
   # example services
   backend-app:
-    image: tutum/hello-world
+    image: dockercloud/hello-world
     ports:
       - 80
     environment:
@@ -51,7 +51,7 @@ services:
       SERVICE_CHECK_SCRIPT: "curl --silent --fail $HOSTNAME:$$SERVICE_PORT"
 
   whoami-app:
-    image: kitematic/hello-world-nginx
+    image: emilevauge/whoami
     ports:
       - 80
     environment:

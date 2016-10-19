@@ -38,7 +38,7 @@ services:
       # 1936 is the port for haproxy stats
     ports:
       - '9999:9999'
-      - '1936:1936'
+      - '9998:1936'
     restart: always
     links:
       - consul

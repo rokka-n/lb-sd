@@ -28,7 +28,7 @@ server {
 
 {{range services}} {{$name := .Name}}
   location /{{$name}} {
-    proxy_pass http://{{$name | replaceAll "/" "-"}}/;
+    proxy_pass http://{{$name | replaceAll "/" "-"}};
     proxy_intercept_errors on;    
   }
 {{end}}
