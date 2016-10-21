@@ -10,8 +10,15 @@ It should resolve to your local computer IP or in case if you have read dns serv
 export HOSTNAME=$(hostname)
 or
 export HOSTNAME=$(ipconfig getifaddr en0)
+```
+
+If no network interfaces are configured, run following commands so docker process can use IP alias on lo0 (localhost) interface for communication:
 
 ```
+export HOSTNAME=10.200.10.1/24
+sudo ifconfig lo0 alias $HOSTNAME
+```
+
 This is required so consul can perform healthchecks on external (compare to itself) interface, since all services registered with random ports.
 
 Change folder to fabio and run `docker-compose up -d`.

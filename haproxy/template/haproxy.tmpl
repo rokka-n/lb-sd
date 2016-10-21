@@ -1,7 +1,6 @@
+
 global
-    log 127.0.0.1   local0
-    log 127.0.0.1   local1 notice
-#    debug
+    log 127.0.0.1 local0 info
     stats timeout 30s
     maxconn {{with $maxconn:=key "service/haproxy/maxconn"}}{{$maxconn}}{{else}}4096{{end}}
     daemon
