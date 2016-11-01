@@ -22,7 +22,6 @@ services:
   # registrator adds new launched containers to the consul
   registrator:
     command: -ip $HOSTNAME consul://consul:8500 
-    container_name: registrator
     image: gliderlabs/registrator:latest
     environment:
       HOSTNAME: $HOSTNAME
@@ -35,7 +34,6 @@ services:
   # it needs to talk to consul so it can up to date routing  
   fabio:
     image: magiconair/fabio:latest
-    container_name: fabio
     ports:
       - "9999:9999"
       - "9998:9998"

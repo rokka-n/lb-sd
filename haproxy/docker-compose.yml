@@ -23,7 +23,6 @@ services:
   # registrator adds new launched containers to the consul
   registrator:
     command: -ip $HOSTNAME consul://consul:8500
-    container_name: registrator
     image: gliderlabs/registrator:latest
     environment:
       HOSTNAME: $HOSTNAME
