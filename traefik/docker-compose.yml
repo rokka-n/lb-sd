@@ -34,15 +34,17 @@ services:
   # traefik routs requests to containers registered in consul
   # it needs to talk to consul so it can up to date routing  
   traefik:
-    image: traefik
+    image: traefik:latest
     volumes:
       - ./traefik.toml:/traefik.toml
     ports:
       - "9999:9999"
-      - "9998:8080"
+      - "9998:9998"
     environment:
       SERVICE_9999_ignore: 'yes'
       SERVICE_8080_ignore: 'yes'
+    links:
+      - consul
 
   # a demo app as a backend server where traefik sends requests
   # scale it with docker-compose scale backend-app=5 
