@@ -1,29 +1,29 @@
-version: "2"
+version: "3"
 
 services:
   # consul stores information about services and 
   # also does health checks defined in SERVICE_CHECK_SCRIPT below
   consul:
     image: gliderlabs/consul-server:latest
+    container_name: consul
     ports:
       - "8300:8300"
       - "8400:8400"
       - "8500:8500"
       - "8600:53/udp"
     environment:
-      SERVICE_53_IGNORE: 'yes'
       SERVICE_8300_IGNORE: 'yes'
-      SERVICE_8301_IGNORE: 'yes'
-      SERVICE_8302_IGNORE: 'yes'
       SERVICE_8400_IGNORE: 'yes'
       SERVICE_8500_IGNORE: 'yes'
+      SERVICE_8600_IGNORE: 'yes'
       CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
-    command: -server -bootstrap -dev -ui -advertise 127.0.0.1
+    command: -server -log-level=warn -bootstrap -dev -ui -advertise 127.0.0.1
   
   # registrator adds new launched containers to the consul
   registrator:
     command: -ip $HOSTNAME consul://consul:8500 
     image: gliderlabs/registrator:latest
+    container_name: registrator
     environment:
       HOSTNAME: $HOSTNAME
     volumes:
@@ -35,6 +35,7 @@ services:
   # it needs to talk to consul so it can up to date routing  
   traefik:
     image: traefik:latest
+    container_name: traefik
     volumes:
       - ./traefik.toml:/traefik.toml
     ports:
