@@ -6,9 +6,9 @@ upstream {{$name | replaceAll "/" "-"}} {
 } 
 {{end}}
 
-
 server {
   listen 9999 default_server;
+  access_log /dev/stderr main;
 
   error_page 404 500 502 503 /503.html;
     location = /503.html {

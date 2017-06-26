@@ -9,6 +9,6 @@ set -e
 # Run consul-template for continious sync with consul
 # As soon as new services are registered, consul-template will generate 
 # new haproxy.cfg and will reload haproxy server
-cd /etc/nginx
-nginx
-consul-template -consul=consul:8500 -config=/consul-template/template.d/nginx.json
+
+/usr/sbin/nginx -g 'pid /tmp/nginx.pid;'
+consul-template -config=/consul-template/template.d/nginx.json 
